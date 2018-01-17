@@ -4,6 +4,12 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+/**
+ * 从字符串表示的逻辑表达式转换为逻辑判别结果：true false
+ * 
+ * @author SMF
+ * @time 2018年1月16日
+ */
 public class TestStringToBoll2 {
 
 	public static void main(String[] args) {

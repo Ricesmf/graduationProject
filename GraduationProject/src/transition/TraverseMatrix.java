@@ -5,12 +5,13 @@ import java.util.List;
 
 public class TraverseMatrix {
 
+	public TraverseMatrix(int x) {
+		super();
+		this.x = x;
+	}
+
 	int x = 6;
 	boolean[] verStatus = new boolean[x];
-
-	public static void main(String[] args) {
-
-	}
 
 	public List<ArrayList<Integer>> matrixTraverse(TransItem[][] matrix) {
 		List<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
@@ -40,7 +41,7 @@ public class TraverseMatrix {
 	// 返回与i相连的第一个顶点
 	private int firstAdjVex(TransItem[][] matrix, int i) {
 		for (int j = 0; j < x; j++) {
-			if (matrix[i][j].getRelationStr().equals("<<") && matrix[i][j].isGuard()) {
+			if (matrix[i][j].getRelationStr().equals("<<") && matrix[i][j].getProbability() > 0 && matrix[i][j].isGuard()) {
 				return j;
 			}
 		}
