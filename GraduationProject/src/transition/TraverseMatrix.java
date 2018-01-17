@@ -15,7 +15,7 @@ public class TraverseMatrix {
 
 	public List<ArrayList<Integer>> matrixTraverse(TransItem[][] matrix) {
 		List<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
-		// ¼ÇÂ¼±»·ÃÎÊ¶¥µã
+		// è®°å½•è¢«è®¿é—®é¡¶ç‚¹
 		return res;
 	}
 
@@ -38,7 +38,7 @@ public class TraverseMatrix {
 		}
 	}
 
-	// ·µ»ØÓëiÏàÁ¬µÄµÚÒ»¸ö¶¥µã
+	// è¿”å›ä¸iç›¸è¿çš„ç¬¬ä¸€ä¸ªé¡¶ç‚¹
 	private int firstAdjVex(TransItem[][] matrix, int i) {
 		for (int j = 0; j < x; j++) {
 			if (matrix[i][j].getRelationStr().equals("<<") && matrix[i][j].getProbability() > 0 && matrix[i][j].isGuard()) {
@@ -48,7 +48,7 @@ public class TraverseMatrix {
 		return -1;
 	}
 
-	// ·µ»ØÓëiÏàÁ¬µÄÏÂÒ»¸ö¶¥µã
+	// è¿”å›ä¸iç›¸è¿çš„ä¸‹ä¸€ä¸ªé¡¶ç‚¹
 	private int nextAdjvex(TransItem[][] matrix, int i, int k) {
 		for (int j = (k + 1); j < x; j++) {
 			if (matrix[i][j].getRelationStr().equals("<<") && matrix[i][j].isGuard()) {

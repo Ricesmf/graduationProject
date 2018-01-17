@@ -16,18 +16,23 @@ public class TestElevator
 	public static void main(String[] args)
 	{
 		SimpleFrame frame = new SimpleFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ÍË³öÄ£Ê½£¬ÍË³öÓ¦ÓÃ³ÌĞòºóµÄÄ¬ÈÏ´°¿Ú¹Ø±Õ²Ù×÷
-		frame.setLocation(40, 40); // ´°¿ÚÎ»ÖÃ×ø±ê
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // é€€å‡ºæ¨¡å¼ï¼Œé€€å‡ºåº”ç”¨ç¨‹åºåçš„é»˜è®¤çª—å£å…³é—­æ“ä½œ
+		frame.setLocation(40, 40); // çª—å£ä½ç½®åæ ‡
 		frame.show();
 	}
 }
 
 class SimpleFrame extends JFrame
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5245476712912374402L;
+
 	public SimpleFrame()
 	{
 		setSize(690, 510);
-		setTitle("µçÌİÄ£Äâ");
+		setTitle("ç”µæ¢¯æ¨¡æ‹Ÿ");
 		SimplePanel panel = new SimplePanel();
 		this.add(panel);
 	}
@@ -35,16 +40,20 @@ class SimpleFrame extends JFrame
 
 class SimplePanel extends JPanel
 {
-	private CanvasOuter myCanvasOuter;// ÏÔÊ¾Íâ²¿°´Å¥µÄ»­²¼Àà£¬Î»ÓÚ×ó²à
-	private CanvasInner myCanvasInner;// ÏÔÊ¾ÄÚ²¿°´Å¥µÄ»­²¼Àà£¬Î»ÓÚÓÒ²à
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1740403497922874068L;
+	private CanvasOuter myCanvasOuter;// æ˜¾ç¤ºå¤–éƒ¨æŒ‰é’®çš„ç”»å¸ƒç±»ï¼Œä½äºå·¦ä¾§
+	private CanvasInner myCanvasInner;// æ˜¾ç¤ºå†…éƒ¨æŒ‰é’®çš„ç”»å¸ƒç±»ï¼Œä½äºå³ä¾§
 
-	private Elevator[] s;// µçÌİÊı×é
-	private Found foundThread = new Found();// ÈÎÎñ·ÖÅäÏß³Ì
+	private Elevator[] s;// ç”µæ¢¯æ•°ç»„
+	private Found foundThread = new Found();// ä»»åŠ¡åˆ†é…çº¿ç¨‹
 
-	public final static int NUM = 1; // µçÌİÊı
-	public final static int FLOOR = 8; // Â¥²ã
+	public final static int NUM = 1; // ç”µæ¢¯æ•°
+	public final static int FLOOR = 8; // æ¥¼å±‚
 
-	final int UP = 0; // µçÌİ×´Ì¬³õÊ¼»¯
+	final int UP = 0; // ç”µæ¢¯çŠ¶æ€åˆå§‹åŒ–
 	final int DOWN = 1;
 	final int PAUSE = 2;
 	final int OPEN = 3;
@@ -65,27 +74,27 @@ class SimplePanel extends JPanel
 		}
 		for (int i = 0; i < s.length; i++)
 		{
-			s[i].start();// Ïß³ÌÆô¶¯
+			s[i].start();// çº¿ç¨‹å¯åŠ¨
 		}
-		foundThread.start();// Ïß³ÌÆô¶¯
+		foundThread.start();// çº¿ç¨‹å¯åŠ¨
 	}
 
-	class Found extends Thread // ÈÎÎñ·ÖÅäÏß³Ì
+	class Found extends Thread // ä»»åŠ¡åˆ†é…çº¿ç¨‹
 	{
-		private ArrayList tasks;
+		private ArrayList<Task> tasks;
 		private Task task;
 
 		public Found()
 		{
-			tasks = new ArrayList();
+			tasks = new ArrayList<Task>();
 		}
 
-		public void addTask(int i, boolean flag)// Ìí¼ÓÈÎÎñ
+		public void addTask(int i, boolean flag)// æ·»åŠ ä»»åŠ¡
 		{
 			tasks.add(new Task(i, flag));
 		}
 
-		public void run()// Ïß³ÌÌå
+		public void run()// çº¿ç¨‹ä½“
 		{
 			while (true)
 			{
@@ -97,11 +106,11 @@ class SimplePanel extends JPanel
 					int id = 0;
 					boolean f = task.isUp;
 					boolean isFound = false;
-					if (f)// ÒªÉÏÂ¥
+					if (f)// è¦ä¸Šæ¥¼
 					{
-						for (int j = 0; j < NUM; j++)// µçÌİÊı
+						for (int j = 0; j < NUM; j++)// ç”µæ¢¯æ•°
 						{
-							if ((s[j].state == PAUSE) || (s[j].current < i && s[j].state == UP))// Í£»òÕßµçÌİÕıÔÚ´ÓÏÂÍùÉÏ
+							if ((s[j].state == PAUSE) || (s[j].current < i && s[j].state == UP))// åœæˆ–è€…ç”µæ¢¯æ­£åœ¨ä»ä¸‹å¾€ä¸Š
 							{
 								int distance = Math.abs(i - s[j].current);
 								if (distance < minFloor)
@@ -113,11 +122,11 @@ class SimplePanel extends JPanel
 							}
 						}
 					}
-					else// ÏÂÂ¥
+					else// ä¸‹æ¥¼
 					{
 						for (int j = 0; j < NUM; j++)
 						{
-							if ((s[j].state == PAUSE) || (s[j].current > i && s[j].state == DOWN))// Í£»òÕıÔÚ´ÓÉÏÍùÏÂ
+							if ((s[j].state == PAUSE) || (s[j].current > i && s[j].state == DOWN))// åœæˆ–æ­£åœ¨ä»ä¸Šå¾€ä¸‹
 							{
 								int distance = Math.abs(i - s[j].current);
 								if (distance < minFloor)
@@ -146,7 +155,7 @@ class SimplePanel extends JPanel
 			}
 		}
 
-		class Task// ÈÎÎñ£ºÒªµ½¼¸Â¥£¬ÉÏÈ¥»¹ÊÇÏÂÈ¥
+		class Task// ä»»åŠ¡ï¼šè¦åˆ°å‡ æ¥¼ï¼Œä¸Šå»è¿˜æ˜¯ä¸‹å»
 		{
 			private int floor;
 			private boolean isUp;
@@ -159,7 +168,7 @@ class SimplePanel extends JPanel
 		}
 	}
 
-	public void resetOuterB(int floor) // ÉèÖÃÍâ²¿µÄ°´Å¥
+	public void resetOuterB(int floor) // è®¾ç½®å¤–éƒ¨çš„æŒ‰é’®
 	{
 		myCanvasOuter.bUp[floor].setEnabled(true);
 		myCanvasOuter.bDown[floor].setEnabled(true);
@@ -167,7 +176,7 @@ class SimplePanel extends JPanel
 		myCanvasOuter.bDown[floor].setForeground(null);
 	}
 
-	public void drawButtons(int id)// ÉèÖÃÄÚ²¿°´Å¥
+	public void drawButtons(int id)// è®¾ç½®å†…éƒ¨æŒ‰é’®
 	{
 		for (int i = 0; i < FLOOR; i++)
 		{
@@ -182,26 +191,26 @@ class SimplePanel extends JPanel
 		}
 	}
 
-	class Elevator extends Thread // µçÌİÖ÷Àà
+	class Elevator extends Thread // ç”µæ¢¯ä¸»ç±»
 	{
-		private int id; // µçÌİ±êÊ¶ºÅ
-		private int floor = FLOOR; // ×Ü²ãÊı
+		private int id; // ç”µæ¢¯æ ‡è¯†å·
+		private int floor = FLOOR; // æ€»å±‚æ•°
 		private JPanel myPanel = new JPanel();
 		private JPanel myPanel1 = new JPanel();
 		private JButton numB;
 		private JButton stateB = new JButton("---");
-		private JButton[] buttons; // µçÌİ×é³É
-		public int current = 1; // ËùÔÚÂ¥²ã
-		public int state = PAUSE; // ÉÏÏÂĞĞ±êÖ¾
+		private JButton[] buttons; // ç”µæ¢¯ç»„æˆ
+		public int current = 1; // æ‰€åœ¨æ¥¼å±‚
+		public int state = PAUSE; // ä¸Šä¸‹è¡Œæ ‡å¿—
 		private JButton floorB = new JButton("1");
 
-		private ArrayList destinations; // Ä¿µÄµØÁ´±í
+		private ArrayList<Integer> destinations; // ç›®çš„åœ°é“¾è¡¨
 
 		public Elevator(int x)
 		{
 			id = x;
 			myPanel1.setLayout(new GridLayout());
-			numB = new JButton("µÚ" + (x + 1) + "ºÅµçÌİ");
+			numB = new JButton("ç¬¬" + (x + 1) + "å·ç”µæ¢¯");
 			myPanel1.add(numB);
 			myPanel.setLayout(new GridLayout(floor + 2, 1));
 			floorB.setBackground(Color.WHITE);
@@ -221,10 +230,10 @@ class SimplePanel extends JPanel
 			add(myPanel1);
 			add(myPanel);
 
-			destinations = new ArrayList();
+			destinations = new ArrayList<Integer>();
 		}
 
-		public void addFloor(int i) // ÏìÓ¦Íâ²¿°´Å¥
+		public void addFloor(int i) // å“åº”å¤–éƒ¨æŒ‰é’®
 		{
 			if (destinations.contains(new Integer(i)))
 				return;
@@ -270,7 +279,7 @@ class SimplePanel extends JPanel
 			buttons[i].setBackground(Color.YELLOW);
 		}
 
-		public void wantToFloor(int i) // ÏìÓ¦ÄÚ²¿°´Å¥
+		public void wantToFloor(int i) // å“åº”å†…éƒ¨æŒ‰é’®
 		{
 			if (destinations.contains(new Integer(i)))
 				return;
@@ -321,7 +330,7 @@ class SimplePanel extends JPanel
 			buttons[i].setBackground(Color.YELLOW);
 		}
 
-		public void setStateB() // ÉèÖÃÔËĞĞ×´Ì¬°´Å¥
+		public void setStateB() // è®¾ç½®è¿è¡ŒçŠ¶æ€æŒ‰é’®
 		{
 			if (state == PAUSE)
 			{
@@ -339,39 +348,39 @@ class SimplePanel extends JPanel
 			}
 			else if (state == UP)
 			{
-				stateB.setText("ÉÏ");
+				stateB.setText("ä¸Š");
 				stateB.setForeground(Color.RED);
 
-				myCanvasInner.interPanels[id].stateB.setText("ÉÏ");
+				myCanvasInner.interPanels[id].stateB.setText("ä¸Š");
 				myCanvasInner.interPanels[id].stateB.setForeground(Color.RED);
 
 				if (id == 0)
 				{
-					myCanvasOuter.stateB1.setText("ÉÏ");
+					myCanvasOuter.stateB1.setText("ä¸Š");
 					myCanvasOuter.stateB1.setForeground(Color.RED);
 				}
 				if (id == 1)
 				{
-					myCanvasOuter.stateB2.setText("ÉÏ");
+					myCanvasOuter.stateB2.setText("ä¸Š");
 					myCanvasOuter.stateB2.setForeground(Color.RED);
 				}
 			}
 			else
 			{
-				stateB.setText("ÏÂ");
+				stateB.setText("ä¸‹");
 				stateB.setForeground(Color.RED);
 
-				myCanvasInner.interPanels[id].stateB.setText("ÏÂ");
+				myCanvasInner.interPanels[id].stateB.setText("ä¸‹");
 				myCanvasInner.interPanels[id].stateB.setForeground(Color.RED);
 
 				if (id == 0)
 				{
-					myCanvasOuter.stateB1.setText("ÏÂ");
+					myCanvasOuter.stateB1.setText("ä¸‹");
 					myCanvasOuter.stateB1.setForeground(Color.RED);
 				}
 				if (id == 1)
 				{
-					myCanvasOuter.stateB2.setText("ÏÂ");
+					myCanvasOuter.stateB2.setText("ä¸‹");
 					myCanvasOuter.stateB2.setForeground(Color.RED);
 				}
 			}
@@ -381,11 +390,11 @@ class SimplePanel extends JPanel
 		{
 			while (true)
 			{
-				if (state != PAUSE) // ÔËĞĞÖĞ
+				if (state != PAUSE) // è¿è¡Œä¸­
 				{
-					if (state == OPEN)// ¿ªÃÅ½¨¶ÔÓ¦
+					if (state == OPEN)// å¼€é—¨å»ºå¯¹åº”
 					{
-						buttons[(current + FLOOR - 1) % FLOOR].setBackground(Color.BLACK);// ¿ªÃÅ×´Ì¬ÖĞ
+						buttons[(current + FLOOR - 1) % FLOOR].setBackground(Color.BLACK);// å¼€é—¨çŠ¶æ€ä¸­
 						try
 						{
 							sleep(6000);
@@ -393,14 +402,14 @@ class SimplePanel extends JPanel
 						{
 							System.out.println("Interrupted");
 						}
-						buttons[(current + FLOOR - 1) % FLOOR].setBackground(Color.RED);// ¹ØÃÅ×´Ì¬ÖĞ
+						buttons[(current + FLOOR - 1) % FLOOR].setBackground(Color.RED);// å…³é—¨çŠ¶æ€ä¸­
 						state = PAUSE;
 					}
 					else
 					{
 						int i = ((Integer) (destinations.get(0))).intValue() + 1;
-						// µ±Ç°ËùÔÚÂ¥²ã
-						if (current == i) // µ½´ïÒ»¸öÂ¥²ã
+						// å½“å‰æ‰€åœ¨æ¥¼å±‚
+						if (current == i) // åˆ°è¾¾ä¸€ä¸ªæ¥¼å±‚
 						{
 							destinations.remove(0);
 							if (destinations.isEmpty())
@@ -409,10 +418,10 @@ class SimplePanel extends JPanel
 							}
 							setStateB();
 							drawButtons(id);
-							buttons[(current + FLOOR - 1) % FLOOR].setBackground(Color.BLACK);// µ½´ïÄ¿µÄµØÊ±¿ªÃÅ×´Ì¬ÖĞ
+							buttons[(current + FLOOR - 1) % FLOOR].setBackground(Color.BLACK);// åˆ°è¾¾ç›®çš„åœ°æ—¶å¼€é—¨çŠ¶æ€ä¸­
 							try
 							{
-								sleep(6000);// ĞİÃß3Ãë
+								sleep(6000);// ä¼‘çœ 3ç§’
 							} catch (InterruptedException e)
 							{
 								System.out.println("Interrupted");
@@ -422,7 +431,7 @@ class SimplePanel extends JPanel
 						}
 						else
 						{
-							int follow = current; // ÔËĞĞÇ°µÄÂ¥²ã
+							int follow = current; // è¿è¡Œå‰çš„æ¥¼å±‚
 							if (state == UP)
 							{
 								current++;
@@ -464,26 +473,30 @@ class SimplePanel extends JPanel
 		}
 	}
 
-	class CanvasOuter extends JPanel // ÏÔÊ¾Íâ²¿°´Å¥µÄ»­²¼Àà£¬Î»ÓÚ×ó²à
+	class CanvasOuter extends JPanel // æ˜¾ç¤ºå¤–éƒ¨æŒ‰é’®çš„ç”»å¸ƒç±»ï¼Œä½äºå·¦ä¾§
 	{
-		private JPanel[] oneFloor;// Â¥²ã»­²¼
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4833946455559164822L;
+		private JPanel[] oneFloor;// æ¥¼å±‚ç”»å¸ƒ
 		private int num = SimplePanel.FLOOR;
-		private JButton[] bFloor; // Â¥²ã
+		private JButton[] bFloor; // æ¥¼å±‚
 		private JPanel jp;
 
-		private JPanel[] updownpanel;// ÏÔÊ¾ÉÏÏÂ°´Å¥
-		private JButton[] bUp; // ÉÏĞĞ°´Å¥
-		private JButton[] bDown; // ÏÂĞĞ°´Å¥
-		private JPanel outp;// ÏÔÊ¾¡°µçÌİÍâ²¿¡±
+		private JPanel[] updownpanel;// æ˜¾ç¤ºä¸Šä¸‹æŒ‰é’®
+		private JButton[] bUp; // ä¸Šè¡ŒæŒ‰é’®
+		private JButton[] bDown; // ä¸‹è¡ŒæŒ‰é’®
+		private JPanel outp;// æ˜¾ç¤ºâ€œç”µæ¢¯å¤–éƒ¨â€
 
-		private JPanel statePanel1;// ÏÔÊ¾1ºÅºÍ2ºÅµçÌİµÄ×´Ì¬
+		private JPanel statePanel1;// æ˜¾ç¤º1å·å’Œ2å·ç”µæ¢¯çš„çŠ¶æ€
 		private JPanel statePanel2;
 		private JButton state1;
 		private JButton state2;
-		private JButton floorB1;// ÏÔÊ¾1ºÅµçÌİÂ¥²ã°´Å¥
-		private JButton stateB1;// ÏÔÊ¾1ºÅµçÌİÉÏ¡¢ÏÂ°´Å¥
-		private JButton floorB2;// ÏÔÊ¾2ºÅµçÌİÂ¥²ã°´Å¥
-		private JButton stateB2;// ÏÔÊ¾2ºÅµçÌİÉÏ¡¢ÏÂ°´Å¥
+		private JButton floorB1;// æ˜¾ç¤º1å·ç”µæ¢¯æ¥¼å±‚æŒ‰é’®
+		private JButton stateB1;// æ˜¾ç¤º1å·ç”µæ¢¯ä¸Šã€ä¸‹æŒ‰é’®
+		private JButton floorB2;// æ˜¾ç¤º2å·ç”µæ¢¯æ¥¼å±‚æŒ‰é’®
+		private JButton stateB2;// æ˜¾ç¤º2å·ç”µæ¢¯ä¸Šã€ä¸‹æŒ‰é’®
 
 		CanvasOuter()
 		{
@@ -493,11 +506,11 @@ class SimplePanel extends JPanel
 			jp.setBounds(20, 160, 225, 400);
 
 			outp = new JPanel(new GridLayout());
-			JButton out = new JButton("µçÌİÍâ²¿");
+			JButton out = new JButton("ç”µæ¢¯å¤–éƒ¨");
 			outp.setBounds(20, 10, 225, 60);
 			outp.add(out);
 
-			bFloor = new JButton[num];// ¶¨ÒåÊı×é³¤¶È
+			bFloor = new JButton[num];// å®šä¹‰æ•°ç»„é•¿åº¦
 			bUp = new JButton[num];
 			bDown = new JButton[num];
 			oneFloor = new JPanel[num];
@@ -505,15 +518,15 @@ class SimplePanel extends JPanel
 
 			statePanel1 = new JPanel(new GridLayout(3, 1));
 			statePanel1.setBounds(20, 70, 110, 90);
-			state1 = new JButton("Ò»ºÅµçÌİ");
-			floorB1 = new JButton("1");// ÏÔÊ¾1ºÅµçÌİÂ¥²ã°´Å¥
-			stateB1 = new JButton("---");// ÏÔÊ¾1ºÅµçÌİÉÏ¡¢ÏÂ°´Å¥
+			state1 = new JButton("ä¸€å·ç”µæ¢¯");
+			floorB1 = new JButton("1");// æ˜¾ç¤º1å·ç”µæ¢¯æ¥¼å±‚æŒ‰é’®
+			stateB1 = new JButton("---");// æ˜¾ç¤º1å·ç”µæ¢¯ä¸Šã€ä¸‹æŒ‰é’®
 			floorB1.setBackground(Color.WHITE);
 			statePanel2 = new JPanel(new GridLayout(3, 1));
 			statePanel2.setBounds(134, 70, 110, 90);
-			state2 = new JButton("¶şºÅµçÌİ");
-			floorB2 = new JButton("1");// ÏÔÊ¾2ºÅµçÌİÂ¥²ã°´Å¥
-			stateB2 = new JButton("---");// ÏÔÊ¾2ºÅµçÌİÉÏ¡¢ÏÂ°´Å¥
+			state2 = new JButton("äºŒå·ç”µæ¢¯");
+			floorB2 = new JButton("1");// æ˜¾ç¤º2å·ç”µæ¢¯æ¥¼å±‚æŒ‰é’®
+			stateB2 = new JButton("---");// æ˜¾ç¤º2å·ç”µæ¢¯ä¸Šã€ä¸‹æŒ‰é’®
 			floorB2.setBackground(Color.WHITE);
 
 			statePanel1.add(state1);
@@ -526,17 +539,17 @@ class SimplePanel extends JPanel
 			for (int i = num - 1; i >= 0; i--)
 			{
 				updownpanel[i] = new JPanel(new GridLayout(2, 1));
-				bFloor[i] = new JButton(i + 1 + "Â¥");
+				bFloor[i] = new JButton(i + 1 + "æ¥¼");
 				bUp[i] = new JButton();
 				if (i != num - 1)
 				{
-					bUp[i].setText("¡ø");
+					bUp[i].setText("â–²");
 					bUp[i].addActionListener(new UpAction(i));
 				}
 				bDown[i] = new JButton();
 				if (i != 0)
 				{
-					bDown[i].setText("¨‹");
+					bDown[i].setText("â–¼");
 					bDown[i].addActionListener(new UpAction(i));
 				}
 
@@ -587,13 +600,17 @@ class SimplePanel extends JPanel
 
 	}
 
-	class CanvasInner extends JPanel // ÏÔÊ¾ÄÚ²¿°´Å¥µÄ»­²¼£¬Î»ÓÚÓÒ²à
+	class CanvasInner extends JPanel // æ˜¾ç¤ºå†…éƒ¨æŒ‰é’®çš„ç”»å¸ƒï¼Œä½äºå³ä¾§
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7912873127165688626L;
 		private int num = NUM;
 		private InterButton[] interPanels;
 		public final static int WIDTH = 200;
 		private JPanel panel2 = new JPanel();
-		private JButton inviewB = new JButton("µçÌİÄÚ²¿");
+		private JButton inviewB = new JButton("ç”µæ¢¯å†…éƒ¨");
 
 		public CanvasInner()
 		{
@@ -613,9 +630,13 @@ class SimplePanel extends JPanel
 			setBounds(455, 10, WIDTH, 450);
 		}
 
-		class InterButton extends JPanel // ±íÊ¾Ã¿²¿µçÌİÄÚ²¿°´Å¥µÄÀà
+		class InterButton extends JPanel // è¡¨ç¤ºæ¯éƒ¨ç”µæ¢¯å†…éƒ¨æŒ‰é’®çš„ç±»
 		{
-			private int id; // µçÌİ±êÊ¶ºÅ
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 7241032458800419951L;
+			private int id; // ç”µæ¢¯æ ‡è¯†å·
 			private JPanel panel = new JPanel();
 			private JPanel panel1 = new JPanel();
 			private JButton numB;
@@ -623,13 +644,13 @@ class SimplePanel extends JPanel
 			private JButton stateB = new JButton("---");
 			private JButton openB = new JButton("<>");
 			private JButton closeB = new JButton("><");
-			private JButton[] interB; // ÄÚ²¿°´Å¥Êı×é
+			private JButton[] interB; // å†…éƒ¨æŒ‰é’®æ•°ç»„
 
 			public InterButton(int j)
 			{
 				id = j;
 				this.setLayout(null);
-				numB = new JButton("µÚ" + (j + 1) + "ºÅµçÌİ");
+				numB = new JButton("ç¬¬" + (j + 1) + "å·ç”µæ¢¯");
 				int width = CanvasInner.WIDTH;
 				floorB.setBackground(Color.WHITE);
 
@@ -646,7 +667,7 @@ class SimplePanel extends JPanel
 				for (int i = 0; i < FLOOR; i++)
 				{
 					interB[i] = new JButton();
-					interB[i].setText(i + 1 + "Â¥");
+					interB[i].setText(i + 1 + "æ¥¼");
 					panel.add(interB[i]);
 					interB[i].addActionListener(new goFloor(i));
 				}
@@ -663,7 +684,7 @@ class SimplePanel extends JPanel
 
 			class goFloor implements ActionListener
 			{
-				private int floor; // Ä¿µÄµØÂ¥²ã
+				private int floor; // ç›®çš„åœ°æ¥¼å±‚
 
 				public goFloor(int i)
 				{
@@ -677,7 +698,7 @@ class SimplePanel extends JPanel
 				}
 			}
 
-			class OpenAction implements ActionListener // ¿ªÃÅ¼ü¶ÔÓ¦¼àÌıÆ÷
+			class OpenAction implements ActionListener // å¼€é—¨é”®å¯¹åº”ç›‘å¬å™¨
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -688,7 +709,7 @@ class SimplePanel extends JPanel
 				}
 			}
 
-			class CloseAction implements ActionListener // ¹ØÃÅ¼ü¶ÔÓ¦¼àÌıÆ÷
+			class CloseAction implements ActionListener // å…³é—¨é”®å¯¹åº”ç›‘å¬å™¨
 			{
 				public void actionPerformed(ActionEvent e)
 				{

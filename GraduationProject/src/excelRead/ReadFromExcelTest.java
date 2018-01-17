@@ -11,11 +11,11 @@ public class ReadFromExcelTest {
 			String filepath = "F:/learngit/GraduationProject/eventmatrix1.xlsx";
 			ReadFromExcelFile excelReader = new ReadFromExcelFile(filepath);
 			Map<Integer, Map<Integer, JSONObject>> res = excelReader.getContent();
-			System.out.println("»ñµÃExcel±í¸ñµÄÄÚÈÝ:");
+			System.out.println("èŽ·å¾—Excelè¡¨æ ¼çš„å†…å®¹:");
 			for (Integer i : res.keySet()) {
 				Map<Integer, JSONObject> cellContent = res.get(i);
 				for (Integer j : cellContent.keySet()) {
-					System.out.println(String.format("µÚ%sÐÐ£¬µÚ%sÁÐÄÚÈÝÎª%s", i, j, cellContent.get(j)));
+					System.out.println(String.format("ç¬¬%sè¡Œï¼Œç¬¬%såˆ—å†…å®¹ä¸º%s", i, j, cellContent.get(j)));
 				}
 			}
 

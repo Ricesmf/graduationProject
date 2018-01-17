@@ -5,10 +5,10 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 /**
- * ´Ó×Ö·û´®±íÊ¾µÄÂß¼­±í´ïÊ½×ª»»ÎªÂß¼­ÅĞ±ğ½á¹û£ºtrue false
+ * ä»å­—ç¬¦ä¸²è¡¨ç¤ºçš„é€»è¾‘è¡¨è¾¾å¼è½¬æ¢ä¸ºé€»è¾‘åˆ¤åˆ«ç»“æœï¼štrue false
  * 
  * @author SMF
- * @time 2018Äê1ÔÂ16ÈÕ
+ * @time 2018å¹´1æœˆ16æ—¥
  */
 public class TestStringToBoll2 {
 
@@ -32,7 +32,7 @@ public class TestStringToBoll2 {
 			e.printStackTrace();
 		}
 
-		System.out.println("½á¹ûÀàĞÍ:" + result.getClass().getName() + ",¼ÆËã½á¹û:" + result);
+		System.out.println("ç»“æœç±»å‹:" + result.getClass().getName() + ",è®¡ç®—ç»“æœ:" + result);
 		return (boolean) result;
 	}
 }

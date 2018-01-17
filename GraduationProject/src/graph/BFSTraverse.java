@@ -5,20 +5,20 @@ import java.util.Queue;
 
 public class BFSTraverse {
 
-	// ¹¹ÔìÍ¼µÄ±ß
+	// æ„é€ å›¾çš„è¾¹
 	private int[][] edges = { { 0, 1, 0, 0, 0, 1, 0, 0, 0 },
 			{ 1, 0, 1, 0, 0, 0, 1, 0, 1 }, { 0, 1, 0, 1, 0, 0, 0, 0, 1 },
 			{ 0, 0, 1, 0, 1, 0, 1, 1, 1 }, { 0, 0, 0, 1, 0, 1, 0, 1, 0 },
 			{ 1, 0, 0, 0, 1, 0, 1, 0, 0 }, { 0, 1, 0, 1, 0, 1, 0, 1, 0 },
 			{ 0, 0, 0, 1, 1, 0, 1, 0, 0 }, { 0, 1, 1, 1, 0, 0, 0, 0, 0 } };
-	// ¹¹ÔìÍ¼µÄ¶¥µã
+	// æ„é€ å›¾çš„é¡¶ç‚¹
 	private String[] vertexs = { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
-	// ¼ÇÂ¼±»·ÃÎÊ¶¥µã
+	// è®°å½•è¢«è®¿é—®é¡¶ç‚¹
 	private boolean[] verStatus;
-	// ¶¥µã¸öÊı
+	// é¡¶ç‚¹ä¸ªæ•°
 	private int vertexsNum = vertexs.length;
 
-	// ¹ãËÑ
+	// å¹¿æœ
 	private void BFS() {
 		verStatus = new boolean[vertexsNum];
 		Queue<Integer> temp = new LinkedList<Integer>();
@@ -41,7 +41,7 @@ public class BFSTraverse {
 		}
 	}
 
-	// ·µ»ØÓëiÏàÁ¬µÄµÚÒ»¸ö¶¥µã
+	// è¿”å›ä¸iç›¸è¿çš„ç¬¬ä¸€ä¸ªé¡¶ç‚¹
 	private int firstAdjvex(int i) {
 		for (int j = 0; j < vertexsNum; j++) {
 			if (edges[i][j] > 0) {
@@ -51,7 +51,7 @@ public class BFSTraverse {
 		return -1;
 	}
 
-	// ·µ»ØÓëiÏàÁ¬µÄÏÂÒ»¸ö¶¥µã
+	// è¿”å›ä¸iç›¸è¿çš„ä¸‹ä¸€ä¸ªé¡¶ç‚¹
 	private int nextAdjvex(int i, int k) {
 		for (int j = (k + 1); j < vertexsNum; j++) {
 			if (edges[i][j] > 0) {
@@ -61,7 +61,7 @@ public class BFSTraverse {
 		return -1;
 	}
 
-	// ²âÊÔ
+	// æµ‹è¯•
 	public static void main(String args[]) {
 		new BFSTraverse().BFS();
 	}

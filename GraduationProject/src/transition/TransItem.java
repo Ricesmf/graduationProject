@@ -20,12 +20,12 @@ import excelRead.ReadFromExcelFile;
  */
 public class TransItem {
 
-	private String relationStr; // Ç°Ğò¹ØÏµµÈ
-	private String duration; // ±íÊ¾×ª»»Íê³ÉµÄÊ±¼äÇø¼ä£»ÀıÈç[1,5] (1,5]µÈ
-	public boolean guard; // ÒÔrelationStrºÍguard¹²Í¬¾ö¶¨×ª»»ÊÇ·ñ¿ÉÒÔ·¢Éú£¬Â·¾¶¿ÉĞĞÓë·ñ
+	private String relationStr; // å‰åºå…³ç³»ç­‰
+	private String duration; // è¡¨ç¤ºè½¬æ¢å®Œæˆçš„æ—¶é—´åŒºé—´ï¼›ä¾‹å¦‚[1,5] (1,5]ç­‰
+	public boolean guard; // ä»¥relationStrå’Œguardå…±åŒå†³å®šè½¬æ¢æ˜¯å¦å¯ä»¥å‘ç”Ÿï¼Œè·¯å¾„å¯è¡Œä¸å¦
 	public int times;
 	public double probability;
-	public Set<String> itemToBeCleared;// ¼¯ºÏÖĞÔªËØÊÇÊ±ÖÓÔªËØ£»±íÊ¾ĞèÒªÇåÁãÖØĞÂ¼ÆÊ±µÄÊ±ÖÓÔªËØ
+	public Set<String> itemToBeCleared;// é›†åˆä¸­å…ƒç´ æ˜¯æ—¶é’Ÿå…ƒç´ ï¼›è¡¨ç¤ºéœ€è¦æ¸…é›¶é‡æ–°è®¡æ—¶çš„æ—¶é’Ÿå…ƒç´ 
 
 	public String getRelationStr() {
 		return relationStr;
@@ -96,7 +96,7 @@ public class TransItem {
 			for (Integer i : contents.keySet()) {
 				Map<Integer, JSONObject> cellContent = contents.get(i);
 				for (Integer j : cellContent.keySet()) {
-					System.out.println(String.format("µÚ%sĞĞ£¬µÚ%sÁĞÄÚÈİÎª%s", i, j, cellContent.get(j)));
+					System.out.println(String.format("ç¬¬%sè¡Œï¼Œç¬¬%såˆ—å†…å®¹ä¸º%s", i, j, cellContent.get(j)));
 					String relationStr = cellContent.get(j).getString("relationStr");
 					JSONArray guard = cellContent.get(j).getJSONArray("guard");
 					int times = cellContent.get(j).getIntValue("times");
@@ -140,7 +140,7 @@ public class TransItem {
 			e.printStackTrace();
 		}
 
-		System.out.println("½á¹ûÀàĞÍ:" + result.getClass().getName() + ",¼ÆËã½á¹û:" + result);
+		System.out.println("ç»“æœç±»å‹:" + result.getClass().getName() + ",è®¡ç®—ç»“æœ:" + result);
 		return (boolean) result;
 	}
 

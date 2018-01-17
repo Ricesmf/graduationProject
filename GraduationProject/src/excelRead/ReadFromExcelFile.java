@@ -27,7 +27,7 @@ public class ReadFromExcelFile {
 		if (null == filepath) {
 			return;
 		}
-		// ¶ÁÈ¡
+		// è¯»å–
 		String fileSuffix = filepath.substring(filepath.lastIndexOf('.'));
 		try {
 			InputStream is = new FileInputStream(filepath);
@@ -56,16 +56,16 @@ public class ReadFromExcelFile {
 				Sheet sheet = wb.getSheetAt(i);
 				int rowNum = sheet.getLastRowNum();
 				if (rowNum > 0) {
-					// µÚÒ»ĞĞÎª±íÍ·ÒÔ¼°±í¸ñÄÚÈİËµÃ÷
+					// ç¬¬ä¸€è¡Œä¸ºè¡¨å¤´ä»¥åŠè¡¨æ ¼å†…å®¹è¯´æ˜
 					Row row = sheet.getRow(2);
 					int colNum = row.getPhysicalNumberOfCells();
-					// ÕıÎÄ´ÓµÚÈıĞĞ¿ªÊ¼
+					// æ­£æ–‡ä»ç¬¬ä¸‰è¡Œå¼€å§‹
 					for (int j = 2; j < rowNum; j++) {
 						row = sheet.getRow(j);
-						// map<ÁĞ£¬µ¥Ôª¸ñÖĞJSON´®ÄÚÈİ>
+						// map<åˆ—ï¼Œå•å…ƒæ ¼ä¸­JSONä¸²å†…å®¹>
 						Map<Integer, JSONObject> cellContent = new HashMap<Integer, JSONObject>();
 						for (int k = 1; k < colNum; k++) {
-							// µ¥Ôª¸ñÖĞJSON´®ÄÚÈİ
+							// å•å…ƒæ ¼ä¸­JSONä¸²å†…å®¹
 							JSONObject content = JSON.parseObject(row.getCell(k).toString());
 							cellContent.put(k, content);
 						}
