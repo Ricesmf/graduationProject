@@ -6,30 +6,61 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * 案例设计:
+ * 
+ * Server：S
+ * 
+ * Client：clientA， clientB，clientC
+ * 
+ * Client端行为：
+ * 
+ * ******提示信息后续添加******
+ * 
+ * 1. 输入任意字符S表示“登录”请求
+ * 
+ * 2. S返回提示输入标识号
+ * 
+ * 3.输入标识号---S判断是否唯一，返回判断结果，重新输入标识号，直到标志号合法
+ * 
+ * 4. 任意一个客户端登录，提示所有客户端，连接的客户端个数和列表。
+ * 
+ * 5.发送消息，clientA发送一个消息，clientB，clientC显示clientA发送的消息内容，同理
+ * 
+ * 6.成功了，clientA收到S发送的反馈。
+ * 
+ * 7.每个客户端在不同的情况下处理不同（定时、sleep）
+ * 
+ * @author SMF
+ * @time 2018年1月22日
+ */
 public class Server extends ServerSocket {
 
 	private static final int SERVER_PORT = 5678;
 
 	private static boolean isPrint = false;// 是否输出消息标志
-	private static List<String> user_list = new ArrayList<String>();// 登录用户集合
-	private static List<ServerThread> thread_list = new ArrayList<ServerThread>();// 服务器已启用线程集合
-	private static LinkedList<String> message_list = new LinkedList<String>();// 存放消息队列
+	private static CopyOnWriteArrayList<HandlerThread> tl = new CopyOnWriteArrayList<HandlerThread>();// 服务器已启用线程集合
+	private static CopyOnWriteArraySet<String> clientSet = new CopyOnWriteArraySet<String>();// 保存上线的客户端的唯一标识号
+
+	@SuppressWarnings("resource")
+	public static void main(String[] args) throws Exception {
+		new Server();// 启动服务端
+	}
 
 	/**
 	 * 创建服务端Socket,创建向客户端发送消息线程,监听客户端请求并处理
 	 */
 	public Server() throws IOException {
 		super(SERVER_PORT);// 创建ServerSocket
-		// new PrintOutThread();// 创建向客户端发送消息线程
 
 		try {
 			while (true) {// 监听客户端请求，启个线程处理
 				Socket socket = accept();
-				new ServerThread(socket);
+				new HandlerThread(socket);
 
 			}
 		} catch (Exception e) {
@@ -38,35 +69,20 @@ public class Server extends ServerSocket {
 		}
 	}
 
-	/**
-	 * 监听是否有输出消息请求线程类,向客户端发送消息
-	 */
-	/*
-	 * class PrintOutThread extends Thread {
-	 * 
-	 * public PrintOutThread() { start(); }
-	 * 
-	 * @Override public void run() { while (true) { if (isPrint) {//
-	 * 将缓存在队列中的消息按顺序发送到各客户端，并从队列中清除。 String message = message_list.getFirst();
-	 * for (ServerThread thread : thread_list) { thread.sendMessage(message); }
-	 * message_list.removeFirst(); isPrint = message_list.size() > 0 ? true :
-	 * false; } } } }
-	 */
-	/**
-	 * 服务器线程类
-	 */
-	class ServerThread extends Thread {
+	class HandlerThread extends Thread {
+
 		private Socket client;
 		private PrintWriter out;
 		private BufferedReader in;
-		private String name;
+		private String identity_card;
+		private LinkedBlockingQueue<String> msgs = new LinkedBlockingQueue<String>();// 存放消息队列
 
-		public ServerThread(Socket s) throws IOException {
+		public HandlerThread(Socket s) throws IOException {
 			client = s;
 			out = new PrintWriter(client.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			in.readLine();
-			out.println("成功连上聊天室,请输入你的名字：");
+			out.println("成功连上,请输入标识名：");
 			start();
 		}
 
@@ -74,75 +90,84 @@ public class Server extends ServerSocket {
 		public void run() {
 			try {
 				int flag = 0;
-				String line = in.readLine();
-				while (!"bye".equals(line)) {
-					// 查看在线用户列表
-					if ("showuser".equals(line)) {
-						out.println(this.listOnlineUsers());
-						line = in.readLine();
-					}
-					// 第一次进入，保存名字
-					if (flag++ == 0) {
-						name = line;
-						user_list.add(name);
-						thread_list.add(this);
-						out.println(name + "你好,可以开始聊天了...");
-						this.pushMessage("Client<" + name + ">进入聊天室...");
-						isPrint = message_list.size() > 0 ? true : false;
-					} else {
-						this.pushMessage("Client<" + name + "> say : " + line);
-						isPrint = message_list.size() > 0 ? true : false;
-					}
-
-					while (isPrint) {// 将缓存在队列中的消息按顺序发送到各客户端，并从队列中清除。
-						String message = message_list.getFirst();
-						for (ServerThread thread : thread_list) {
-							thread.sendMessage(message);
+				String clientIn = in.readLine();
+				while (!"BYE".equals(clientIn)) {
+					if (flag == 0) { // flag == 0 此客户端第一次登录
+						identity_card = clientIn;
+						if (clientSet.contains(identity_card)) {
+							this.sendMessage("该标识名已经存在，请重新输入 ： ");
+						} else {
+							flag++;
+							clientSet.add(identity_card);
+							tl.add(this);
+							this.sendMessage("加入成功！");
+							// 客户端等于或者超过两个的情况
+							if (null != tl && tl.size() > 1) {
+								for (HandlerThread t : tl) {
+									t.sendMessage("当前加入的客户端个数为 ：" + clientSet.size());
+									t.sendMessage("加入的客户端为 ：" + clientSet.toString());
+								}
+							} else {
+								this.sendMessage("当前只有一个客户端加入！");
+							}
 						}
-						message_list.removeFirst();
-						isPrint = message_list.size() > 0 ? true : false;
+					} else {// 不是第一次登录
+						if (null != tl && tl.size() > 1) {
+							// 客户端等于或者超过两个的情况
+							this.pushMessage("客户端" + this.identity_card + "发送消息　：　" + clientIn);
+							isPrint = msgs.size() > 0 ? true : false;
+							while (isPrint) {
+								String msg = msgs.poll();
+								for (HandlerThread t : tl) {
+									if (t != this) {
+										t.sendMessage(msg);
+									}
+								}
+								isPrint = msgs.size() > 0 ? true : false;
+							}
+						}
 					}
-					line = in.readLine();
+					clientIn = in.readLine();
 				}
 				out.println("byeClient");
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {// 用户退出聊天室
+			} finally {// Client退出
+
 				try {
 					client.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				thread_list.remove(this);
-				user_list.remove(name);
-				pushMessage("Client<" + name + ">退出了聊天室");
+
+				clientSet.remove(identity_card);
+				tl.remove(this);
+				// pushMessage("Client<" + identity_card + ">退出");
+				if (null != tl && tl.size() > 0) {
+					for (HandlerThread t : tl) {
+						t.sendMessage("客户端" + this.identity_card + "退出！");
+						t.sendMessage("当前没有退出的客户端个数为 ：" + clientSet.size());
+						t.sendMessage("没有退出的客户端为 ：" + clientSet.toString());
+					}
+
+				}
 			}
+
 		}
 
 		// 放入消息队列末尾，准备发送给客户端
 		private void pushMessage(String msg) {
-			message_list.addLast(msg);
+			msgs.offer(msg);
 			isPrint = true;
 		}
 
 		// 向客户端发送一条消息
 		private void sendMessage(String msg) {
-			out.println(msg);
-		}
-
-		// 统计在线用户列表
-		private String listOnlineUsers() {
-			String s = "--- 在线用户列表 ---\015\012";
-			for (int i = 0; i < user_list.size(); i++) {
-				s += "[" + user_list.get(i) + "]\015\012";
+			if (null != msg) {
+				out.println(msg);
 			}
-			s += "--------------------";
-			return s;
 		}
+
 	}
 
-	@SuppressWarnings("resource")
-	public static void main(String[] args) throws IOException {
-		new Server();// 启动服务端
-	}
 }
