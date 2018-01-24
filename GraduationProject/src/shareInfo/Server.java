@@ -81,7 +81,7 @@ public class Server extends ServerSocket {
 			client = s;
 			out = new PrintWriter(client.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			in.readLine();
+			// in.readLine();
 			out.println("成功连上,请输入标识名：");
 			start();
 		}
